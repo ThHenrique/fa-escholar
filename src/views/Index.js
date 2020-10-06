@@ -47,6 +47,7 @@ import {
 } from "variables/charts.js";
 
 import Header from "components/Headers/Header.js";
+import AuthNavbar from '../components/Navbars/AuthNavbar'
 
 class Index extends React.Component {
   constructor(props){
