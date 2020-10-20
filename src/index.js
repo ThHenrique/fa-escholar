@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /*!
 
 =========================================================
@@ -26,7 +27,9 @@ import "assets/scss/argon-dashboard-react.scss";
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 import Home from "views/pages/Home";
-
+import WishList from "views/pages/WishList"
+import MinhasDisciplinas from "views/pages/MinhasDisciplinas"
+import HistCompras from "views/pages/HistCompras"
 
 ReactDOM.render(
   <BrowserRouter>
@@ -34,6 +37,9 @@ ReactDOM.render(
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/auth" render={props => <AuthLayout {...props} />} />
       <Route path="/home" render={props => <Home {...props} />} />
+      <Route path="/wishlist" render={props => <WishList {...props} />} />
+      <Route path="/minhasdisciplinas" render={props => <MinhasDisciplinas {...props} />} />
+      <Route path="/histcompras" render={props => <HistCompras {...props} />} />
       <Redirect from="/" to="/admin/index" />
     </Switch>
   </BrowserRouter>,
