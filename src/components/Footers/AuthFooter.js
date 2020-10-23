@@ -1,82 +1,97 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-/*eslint-disable*/
 import React from "react";
 
-// reactstrap components
 import { NavItem, NavLink, Nav, Container, Row, Col } from "reactstrap";
 
 class Login extends React.Component {
   render() {
     return (
       <>
-        <footer className="py-5">
+        <footer style={{ backgroundColor: '#2E2E37' }}
+          className="pt-5 px-6 ml--5 footer"
+          id="footer-main"
+        >
           <Container>
-            <Row className="align-items-center justify-content-xl-between">
-              <Col xl="6">
-                <div className="copyright text-center text-xl-left text-muted">
-                  © 2018{" "}
-                  <a
-                    className="font-weight-bold ml-1"
-                    href="https://www.creative-tim.com?ref=adr-auth-footer"
+          <Row className="justify-content-center">
+            <Col lg="3">              
+              <div style={{ fontSize: 13, textAlign: 'justify' }}
+                className="ml-4"
+              >
+                Et has minim elitr intellegat. Mea aeterno eleifend antiopam ad, 
+                nam no suscipit quaerendum. At nam minimum ponderum. Est audiam 
+                animal molestiae te. Ex duo eripuit mentitum.                
+              </div>
+            </Col>
+            <Col>
+              <div className="mb-4 font-weight-bold ml-6">
+                SOBRE NÓS
+              </div>
+              <Nav style={{ marginLeft: 60, color: '#FFF' }}>
+                <NavItem>
+                  <NavLink
+                    href="#"
+                  >
+                    Sobre o Escholar
+                    </NavLink>
+                </NavItem>
+                <div className="w-100" />
+              </Nav>
+            </Col>
+            <Col lg="4">
+              <div className="mb-4 font-weight-bold ml-5">
+                NOSSAS MÍDIAS DIGITAIS
+                </div>
+              <Nav style={{ marginLeft: 35 }}>                
+                <div className="w-100" />
+                <NavItem>
+                  <NavLink
+                    href="/auth/chat"
+                  >
+                    Contato
+                  </NavLink>
+
+                </NavItem>
+                <div className="w-100" />
+                <NavItem>
+                  <NavLink
+                    href="https://www.gmail.com.br"
                     target="_blank"
                   >
-                    Creative Tim
+                    <i class="far fa-envelope"></i>
+                    &nbsp; apoio@escholar.com
+                  </NavLink>
+                </NavItem>
+                <div className="w-100" />
+                <div className="data">
+                  <a href="/">
+                    <i className="fab fa-facebook fa-2x" style={{ color: "#3b5998" }} />
+                  </a>
+                  <a href="/">
+                    <i className="fab fa-instagram fa-2x ml-3" style={{ color: "#8a3ab9" }} />
+                  </a>
+                  <a href="/">
+                    <i className="fab fa-twitter fa-2x ml-3" style={{ color: "#1da1f2" }} />
+                  </a>
+                  <a href="/" >
+                    <i className="fab fa-linkedin fa-2x ml-3" style={{ color: "#1da1f2" }} />
+                  </a>
+                  <a href="/">
+                    <i className="fab fa-whatsapp fa-2x ml-3" style={{ color: "#01DF3A" }} />
                   </a>
                 </div>
-              </Col>
-              <Col xl="6">
-                <Nav className="nav-footer justify-content-center justify-content-xl-end">
-                  <NavItem>
-                    <NavLink
-                      href="https://www.creative-tim.com?ref=adr-auth-footer"
-                      target="_blank"
-                    >
-                      Creative Tim
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="https://www.creative-tim.com/presentation?ref=adr-auth-footer"
-                      target="_blank"
-                    >
-                      About Us
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="http://blog.creative-tim.com?ref=adr-auth-footer"
-                      target="_blank"
-                    >
-                      Blog
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md?ref=adr-auth-footer"
-                      target="_blank"
-                    >
-                      MIT License
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-              </Col>
-            </Row>
+              </Nav>
+            </Col>           
+          </Row>
+          <Row className="mb-1">
+            <Col className="d-flex justify-content-center">
+              <div
+                style={{ fontSize: 13 }}
+                className="text-center"
+              >
+                São José dos Campos - SP <br />
+                Desenvolvido por <i class="far fa-copyright"></i> Escholar                
+              </div>
+            </Col>
+          </Row>
           </Container>
         </footer>
       </>

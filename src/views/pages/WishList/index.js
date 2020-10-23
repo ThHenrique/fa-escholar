@@ -1,13 +1,5 @@
-import React from "react";
-import { Button } from "reactstrap";
-import { Link } from "react-router-dom";
-
+import React, { useState, useEffect } from "react";
 import {
-  Card,
-  CardBody,
-  CardImg,
-  CardTitle,
-  CardText,
   Container,
   Col,
   Row,
@@ -16,258 +8,69 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  UncontrolledCollapse,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  Navbar,
-  NavItem,
-  NavLink,
-  Nav
 
 } from "reactstrap";
 
-export default function WishList() {
+import CardDiscipline from "../../../components/Utils/CardDiscipline";
+import CardProfile from "../../../components/Utils/CardProfile";
 
+export default function WishList() {
+  const [displines, setDisplines] = useState([]);
+  const [w, setW] = useState("");
+
+  const allowedState = [
+    {
+      id: 1, name: "Português: Pontuação", alunos: 59, lucro: 299.00, uri: "https://s3.amazonaws.com/midia.korntraducoes.com.br/wp-content/uploads/2018/06/14103621/Depositphotos_68180183_original.jpg",
+    },
+    {
+      id: 2, name: "Matemática", alunos: 99, lucro: 475.00, uri: "https://sto-blog.s3.amazonaws.com/images/2018/06/13/matematica-o-guia-completo.jpg",
+    },
+    {
+      id: 3, name: "Inglês", alunos: 159, lucro: 799.00, uri: "https://www.fapcom.edu.br/wp-content/uploads/2019/02/Dicas-para-melhorar-o-ingl%C3%AAs-1-750x500.jpeg",
+    },
+    {
+      id: 2, name: "Hadware", alunos: 99, lucro: 475.00, uri: "https://i.ytimg.com/vi/IfpbpvP-FgU/maxresdefault.jpg",
+    },
+    {
+      id: 3, name: "Lógica de programação", alunos: 159, lucro: 799.00, uri: "https://becode.com.br/wp-content/uploads/2016/06/Algoritmos-1.jpg",
+    },
+  ];
+
+  useEffect(() => {
+    setDisplines(allowedState);
+    setW(window.innerWidth);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
-    <Container>
-    <Navbar
-          className="navbar-horizontal navbar-dark bg-primary mt-4"
-          expand="lg"
-        >
-          <Container>
-          <a
-          className="avatar"
-          href="#pablo"
-          onClick={e => e.preventDefault()}
-        >
-          <img alt="..." src={require("assets/img/theme/angular.jpg")} />
-        </a>
-            <button
-              aria-controls="navbar-primary"
-              aria-expanded={false}
-              aria-label="Toggle navigation"
-              className="navbar-toggler"
-              data-target="#navbar-primary"
-              data-toggle="collapse"
-              id="navbar-primary"
-              type="button"
-            >
-              <span className="navbar-toggler-icon" />
-            </button>
-            <UncontrolledCollapse navbar toggler="#navbar-primary">
-              <div className="navbar-collapse-header">
-                <Row>
-                  <Col className="collapse-brand" xs="6">
-                    <Link to="/">
-                      <img
-                        alt="..."
-                        src={require("assets/img/brand/blue.png")}
-                      />
-                    </Link>
-                  </Col>
-                  <Col className="collapse-close" xs="6">
-                    <button
-                      aria-controls="navbar-primary"
-                      aria-expanded={false}
-                      aria-label="Toggle navigation"
-                      className="navbar-toggler"
-                      data-target="#navbar-primary"
-                      data-toggle="collapse"
-                      id="navbar-primary"
-                      type="button"
-                    >
-                      <span />
-                      <span />
-                    </button>
-                  </Col>
-                </Row>
-              </div>
-              <Nav className="ml-lg-auto" navbar>
-                <NavItem>
-                  <NavLink href="#pablo" onClick={e => e.preventDefault()}>
-                    Minhas Disciplinas <span className="sr-only">(current)</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="#pablo" onClick={e => e.preventDefault()}>
-                    Lista de Desejo
-                  </NavLink>
-                </NavItem>
-                <UncontrolledDropdown nav>
-                  <NavLink
-                    aria-expanded={false}
-                    aria-haspopup={true}
-                    data-toggle="dropdown"
-                    href="#pablo"
-                    id="navbar-primary_dropdown_1"
-                    onClick={e => e.preventDefault()}
-                    role="button"
-                  >
-                    Carrinho
-                  </NavLink>
-                  <DropdownMenu
-                    aria-labelledby="navbar-primary_dropdown_1"
-                    right
-                  >
-                    <DropdownItem
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      Action
-                    </DropdownItem>
-                    <DropdownItem
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      Another action
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      Perfil
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </Nav>
-            </UncontrolledCollapse>
-          </Container>
-        </Navbar>
-    </Container>
-      <Container>
+      <Container className="mt-5">
         <Row>
-        <Col md={3}>
-        <Card>
-          <CardImg
-            alt="..."
-            src={require("assets/img/theme/react.jpg")}
-            top
-          />
-        <Button color="secondary" outline type="button">
-          Editar Perfil
-        </Button>
-        <Button color="secondary" outline type="button">
-          Minhas Disciplinas
-        </Button> <Button color="secondary" outline type="button">
-          Histórico de Compras
-        </Button>
-        <Button color="secondary" outline type="button">
-          Lista de Desejos
-        </Button> 
-          </Card>
-        </Col>
-        <Col md={8}>
-          <Col md={4}>
-          <FormGroup>
-            <InputGroup
-            >
-              <Input
-                placeholder="Pesquisar"
-                type="text"
-              />
-              <InputGroupAddon addonType="append">
-                <InputGroupText><i className="fa fa-search"></i></InputGroupText>
-              </InputGroupAddon>
-              <i md={12}
-              className="fa fa-search">
-              </i>
-            </InputGroup>
-          </FormGroup>
+          <Col lg="3" md="6">
+            <CardProfile profile={displines} />
           </Col>
-          <div className="card-deck row">
-                <Card>
-                  <CardImg
-                    alt="..."
-                    src={require("assets/img/theme/matematica-image.jpg")}
-                    top
+          <Col lg="9">
+            <Col md={6}>
+              Lista de Desejo
+              <FormGroup>
+                <InputGroup>
+                  <Input
+                    placeholder="Pesquisar"
+                    type="text"
                   />
-                  <CardBody>
-                  <Button color="secondary" type="button">
-          Ver Mais
-        </Button>
-                    <CardTitle>Matemática</CardTitle>
-                    <CardText>
-                      <small className="text-muted">Lógica</small>
-                    </CardText>
-                    <CardText>
-                      Descrição da disciplina etc...
-                    </CardText>
-                    <CardText>
-                      <small className="text-muted">R$ 000,00</small>
-                    </CardText>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardImg
-                    alt="..."
-                    src={require("assets/img/theme/port-image.jpg")}
-                    top
-                  />
-                  <CardBody>
-                  <Button color="secondary" type="button">
-          Ver Mais
-        </Button>
-                    <CardTitle>Português</CardTitle>
-                    <CardText>
-                      <small className="text-muted">Pontuação e Concordância</small>
-                    </CardText>
-                    <CardText>
-                      Descrição da disciplina etc...
-                    </CardText>
-                    <CardText>
-                      <small className="text-muted">R$ 000,00</small>
-                    </CardText>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardImg
-                    alt="..."
-                    src={require("assets/img/theme/matematica-image.jpg")}
-                    top
-                  />
-                  <CardBody>
-                  <Button color="secondary" type="button">
-          Ver Mais
-        </Button>
-                    <CardTitle>Matemática</CardTitle>
-                    <CardText>
-                      <small className="text-muted">Gráficos</small>
-                    </CardText>
-                    <CardText>
-                      Descrição da disciplina etc...
-                    </CardText>
-                    <CardText>
-                      <small className="text-muted">R$ 000,00</small>
-                    </CardText>
-                  </CardBody>
-                </Card>
-                <Card>
-                  <CardImg
-                    alt="..."
-                    src={require("assets/img/theme/angular.jpg")}
-                    top
-                  />
-                  <CardBody>
-                  <Button color="secondary" type="button">
-          Ver Mais
-        </Button>
-                    <CardTitle>Disciplina (Ex: Matemática)</CardTitle>
-                    <CardText>
-                      <small className="text-muted">Ex: Lógica</small>
-                    </CardText>
-                    <CardText>
-                      Descrição da disciplina etc...
-                    </CardText>
-                    <CardText>
-                      <small className="text-muted">R$ 000,00</small>
-                    </CardText>
-                  </CardBody>
-                </Card> 
-          </div>
-        </Col>
+                  <InputGroupAddon addonType="append">
+                    <InputGroupText><i className="fa fa-search" /></InputGroupText>
+                  </InputGroupAddon>
+                </InputGroup>
+              </FormGroup>
+            </Col>
+            <Row>
+              {displines.map((item) => (
+                <Col lg={w > 1245 ? "4" : "6"} className="mb-5">
+                  <CardDiscipline discipline={item} />
+                </Col>
+              ))}
+            </Row>
+          </Col>
         </Row>
       </Container>
     </>
