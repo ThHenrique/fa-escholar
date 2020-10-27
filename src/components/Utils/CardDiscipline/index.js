@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import {
-  Row, Col, Card, CardImg, CardBody, CardFooter,
+  Row, Col, Card, CardImg, CardBody, CardFooter, Button
 } from "reactstrap";
 
-const CardDiscipline = ({ discipline, premium }) => {
+const CardDiscipline = ({ discipline, premium, icon }) => {
   const history = useHistory();
 
   async function handleOpenAd(id) {
@@ -52,6 +52,12 @@ const CardDiscipline = ({ discipline, premium }) => {
             >
               {discipline.name}
             </p>
+          </Col>
+          <Col>
+          <Button>
+            <i className={icon}>
+            </i>
+          </Button>
           </Col>
         </Row>
         <Row>
