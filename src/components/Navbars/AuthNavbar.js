@@ -1,116 +1,229 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 // reactstrap components
 import {
-  UncontrolledCollapse,
   NavbarBrand,
   Navbar,
   NavItem,
-  NavLink,
   Nav,
   Container,
-  Row,
-  Col
+  Button,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  ButtonDropdown,
+  NavbarToggler,
+  Collapse,
+  Modal,
 } from "reactstrap";
 
-class AdminNavbar extends React.Component {
-  render() {
-    return (
-      <>
-        <Navbar
-          className="navbar-top navbar-horizontal navbar-dark"
-          expand="md"
-        >
-          <Container className="px-4">
-            <NavbarBrand to="/" tag={Link}>
-              <img alt="..." src={require("assets/img/brand/argon-react-white.png")} />
-            </NavbarBrand>
-            <button className="navbar-toggler" id="navbar-collapse-main">
-              <span className="navbar-toggler-icon" />
-            </button>
-            <UncontrolledCollapse navbar toggler="#navbar-collapse-main">
-              <div className="navbar-collapse-header d-md-none">
-                <Row>
-                  <Col className="collapse-brand" xs="6">
-                    <Link to="/">
-                      <img
-                        alt="..."
-                        src={require("assets/img/brand/argon-react.png")}
-                      />
-                    </Link>
-                  </Col>
-                  <Col className="collapse-close" xs="6">
-                    <button
-                      className="navbar-toggler"
-                      id="navbar-collapse-main"
-                    >
-                      <span />
-                      <span />
-                    </button>
-                  </Col>
-                </Row>
-              </div>
-              <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <NavLink className="nav-link-icon" to="/" tag={Link}>
-                    <i className="ni ni-planet" />
-                    <span className="nav-link-inner--text">Dashboard</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className="nav-link-icon"
-                    to="/auth/register"
-                    tag={Link}
-                  >
-                    <i className="ni ni-circle-08" />
-                    <span className="nav-link-inner--text">Register</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className="nav-link-icon"
-                    to="/auth/login"
-                    tag={Link}
-                  >
-                    <i className="ni ni-key-25" />
-                    <span className="nav-link-inner--text">Login</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className="nav-link-icon"
-                    to="/admin/user-profile"
-                    tag={Link}
-                  >
-                    <i className="ni ni-single-02" />
-                    <span className="nav-link-inner--text">Profile</span>
-                  </NavLink>
-                </NavItem>
-              </Nav>
-            </UncontrolledCollapse>
-          </Container>
-        </Navbar>
-      </>
-    );
-  }
-}
+import ModalLogin from "../Utils/ModalLogin";
 
-export default AdminNavbar;
+export default function AdminNavbar() {
+  const [authUser, setAuthUser] = useState("");
+  const [token, setToken] = useState("");
+  const [dropdownOpen, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [path, setPath] = useState("");
+
+  const history = useHistory();
+
+  const toggle = () => setOpen(!dropdownOpen);
+  const toggle2 = () => setIsOpen(!isOpen);
+
+  async function handleLogin(redirect) {
+    setPath(redirect);
+    setModal(!modal);
+    setToken();
+    setAuthUser();
+  }
+
+  function getActiveItem(path) {
+    if (window.location.pathname === path) {
+      return "navbar active";
+    }
+    return "navbar";
+  }
+
+  async function logout() {
+    localStorage.clear();
+    window.location.replace("/auth/login");
+  }
+
+  return (
+    <>
+      <Navbar
+        fixed="top"
+        color="white"
+        ligth
+        expand="lg"
+        style={{ zIndex: 5, width: "100%" }}
+        className="d-flex"
+      >
+        <Container className="d-flex">
+          <NavbarBrand to="/" tag={Link} style={{ cursor: "pointer" }}>
+            <img alt="..." src={require("assets/img/logo.png")} style={{ height: 60 }} />
+          </NavbarBrand>
+          <NavbarToggler onClick={toggle2} />
+          <Collapse isOpen={isOpen} navbar>
+            <Nav className="mr-auto" navbar>
+              <NavItem>
+                <Link to="/">
+                  <span className={getActiveItem("/")}>
+                    Página Inicial
+                  </span>
+                </Link>
+              </NavItem>
+              <NavItem>
+                <Link to="/auth/mydiscipline">
+                  <span className={getActiveItem("/auth/mydiscipline")}>
+                    Minhas Disciplinas
+                  </span>
+                </Link>
+              </NavItem>
+              {token ? (
+                <NavItem>
+                  <Link to="/auth/wishlist">
+                    <span className={getActiveItem("/auth/wishlist")}>
+                      Lista de Desejo
+                    </span>
+                  </Link>
+                </NavItem>
+              ) : (
+                <NavItem>
+                  <span
+                    className={getActiveItem("/auth/wishlist")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Lista de Desejo
+                  </span>
+                </NavItem>
+              )}
+              <NavItem>
+                <Link to="/auth/throw">
+                  <span className={getActiveItem("/auth/throw")}>
+                    Perfil
+                  </span>
+                </Link>
+              </NavItem>
+            </Nav>
+            <Nav className="d-flex">
+              {token ? (
+                <NavItem className="justify-content-end">
+                  <ButtonDropdown
+                    isOpen={dropdownOpen}
+                    toggle={toggle}
+                    style={{ zIndex: 4 }}
+                  >
+                    <DropdownToggle
+                      caret
+                      style={{
+                        borderRadius: 2,
+                        border: 30,
+                        color: "#fff",
+                        backgroundColor: "#fdbd5c",
+                      }}
+                    >
+                      Olá,
+                      {" "}
+                      {authUser}
+                      {" "}
+                      &nbsp;
+                    </DropdownToggle>
+                    <DropdownMenu right className="text-center shadow-sm">
+                      <DropdownItem
+                        style={{ cursor: "pointer" }}
+                        onClick={() => history.push("/auth/myprofile")}
+                      >
+                        <div style={{ fontWeight: 575, color: "#505051" }}>
+                          Meu Perfil
+                        </div>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{ cursor: "pointer" }}
+                        onClick={() => history.push("/auth/myadverts")}
+                      >
+                        <div style={{ fontWeight: 575, color: "#505051" }}>
+                          Meus Anúncios
+                        </div>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{ cursor: "pointer" }}
+                        onClick={() => history.push("/auth/mythrow")}
+                      >
+                        <div style={{ fontWeight: 575, color: "#505051" }}>
+                          Meus Lances
+                        </div>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{ cursor: "pointer" }}
+                        onClick={() => history.push("/auth/wishlist")}
+                      >
+                        <div style={{ fontWeight: 575, color: "#3C64B1" }}>
+                          Lista de Desejos
+                        </div>
+                      </DropdownItem>
+                      <DropdownItem divider />
+                      <DropdownItem
+                        onClick={logout}
+                        style={{ backgroundColor: "#fff", cursor: "pointer" }}
+                      >
+                        <div
+                          style={{ fontWeight: "bolder", color: "#3C64B1" }}
+                        >
+                          Encerrar Sessão
+                        </div>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                </NavItem>
+              ) : (
+                <NavItem>
+                  <Button
+                    className="btn-icon btn-3 fa fa-shopping-cart" 
+                    color="primary" 
+                    type="button"   
+                  >
+                  </Button>
+                  <Button
+                    className="btn-neutral btn-icon"
+                    color="default"
+                    onClick={() => history.push("/auth/login")}
+                    style={{
+                      backgroundColor: "#3C64B1",
+                      border: 0,
+                      color: "#fff",
+                    }}
+                  >
+                    <span className="nav-link-inner--text">ENTRAR</span>
+                  </Button>
+                </NavItem>
+              )}
+            </Nav>
+          </Collapse>
+        </Container>
+      </Navbar>
+      <Modal
+        className="modal-dialog-centered"
+        size="sm"
+        isOpen={modal}
+        toggle={() => handleLogin()}
+      >
+        <div className="modal-header">
+          <span style={{ fontSize: 18, fontWeight: "bold" }}>Bem-vindo</span>
+          <button
+            aria-label="Close"
+            className="close"
+            data-dismiss="modal"
+            type="button"
+            onClick={() => handleLogin()}
+          >
+            <span aria-hidden>×</span>
+          </button>
+        </div>
+        <ModalLogin path={path} />
+      </Modal>
+    </>
+  );
+}
