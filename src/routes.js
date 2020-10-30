@@ -73,5 +73,6 @@ var routes = [
     component: Register,
     layout: "/auth"
   }
+  
 ];
 export default routes;
