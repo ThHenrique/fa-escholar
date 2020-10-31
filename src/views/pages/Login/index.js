@@ -19,14 +19,14 @@ import {
 
 
 export default function login(){
-    
+
     return (
-        <> 
-             <Container>          
+        <>
+             <Container>
                 <Row className="justify-content-center">
                     <Col md={5}>
                         <Card className="bg-secondary shadow border-0">
-                        
+
                         <CardBody className="px-lg-5 py-lg-7">
                             <div className="text-center text-muted mb-4">
                             <big>Bem-vindo !</big>
@@ -71,7 +71,7 @@ export default function login(){
                                 </Button>
                             </div>
                             </Form>
-                            <Row className="mt-3" > 
+                            <Row className="mt-3" >
                         <Col xs="6">
                             <a
                             className="text-gray"
@@ -90,14 +90,14 @@ export default function login(){
                             </a>
 
                         </Col>
-                        
+
                         </Row>
                         </CardBody>
                         </Card>
-                    
+
                     </Col>
                 </Row>
-            </Container>   
+            </Container>
 
 
 
