@@ -19,9 +19,9 @@ import api from "../../../services/api"
 export default function MyDisciplines() {
   const [disciplines, setDisciplines] = useState([]);
   const [w, setW] = useState("");
+  const token = localStorage.getItem('token');
 
   async function getDiscipline() {
-    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYwNDY4MjQwMSwiZXhwIjoxNjA1NTQ2NDAxfQ.N0LsXm5KOfJH1ZnmBtuqekCLwVw_smQ0QDeSss3oE0o"
     const {data} = await api.get("purchase/getHist/1", {
       headers:{
         Authorization:`Bearer ${token}`
@@ -30,24 +30,10 @@ export default function MyDisciplines() {
     setDisciplines(data)
   }
 
-
   useEffect(() => {
     getDiscipline()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIxLCJpYXQiOjE2MDQwMzA0ODksImV4cCI6MTYwNDg5NDQ4OX0.boUGnnJhkD-JoHg_JqNvJNqcM7YmNZAoXA712qMDjdA"
-
-      const { data } = await api.get('purchase/index/1', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      setDisciplines(data.discipline);
-    })()
-  }, [])
 
   return (
     <>

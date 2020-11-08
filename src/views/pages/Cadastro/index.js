@@ -18,14 +18,14 @@ import {
 
 
 export default function cadastro(){
-    
+
     return (
-        <> 
-             <Container>          
+        <>
+             <Container className='p-6'>
                 <Row className="justify-content-center">
                     <Col md={5}>
                         <Card className="bg-secondary shadow border-0">
-                        
+
                         <CardBody className="px-lg-5 py-lg-7">
                             <div className="text-center text-muted mb-4">
                             <big>Bem-vindo !</big>
@@ -39,7 +39,7 @@ export default function cadastro(){
                                         </InputGroupText>
                                         </InputGroupAddon>
                                         <Input placeholder="Nome" type="text" />
-                                    </InputGroup>                         
+                                    </InputGroup>
                             </FormGroup>
 
                             <FormGroup className="mb-3">
@@ -109,16 +109,16 @@ export default function cadastro(){
                                 </Button>
                             </div>
                             </Form>
-                            <Row className="mt-3" > 
-                        
-                        
+                            <Row className="mt-3" >
+
+
                         </Row>
                         </CardBody>
                         </Card>
-                    
+
                     </Col>
                 </Row>
-            </Container>   
+            </Container>
 
 
 

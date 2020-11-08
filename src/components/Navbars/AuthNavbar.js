@@ -107,16 +107,8 @@ export default function AdminNavbar() {
                     </Link>
                   </NavItem>
                   <NavItem>
-                    <span
-                      className={getActiveItem("/auth/wishlist")}
-                      style={{ cursor: "pointer" }}
-                    >
-                      Lista de Desejo
-                    </span>
-                  </NavItem>
-                  <NavItem>
-                    <Link to="/auth/throw">
-                      <span className={getActiveItem("/auth/throw")}>
+                    <Link to="/auth/profile">
+                      <span className={getActiveItem("/auth/profile")}>
                         Perfil
                       </span>
                     </Link>
@@ -129,6 +121,7 @@ export default function AdminNavbar() {
                 className="btn-icon btn-3 fa fa-shopping-cart"
                 color="primary"
                 type="button"
+                onClick={() => history.push("/auth/shoppingcart")}
               >
               </Button>
               {token ? (
@@ -156,7 +149,7 @@ export default function AdminNavbar() {
                     <DropdownMenu right className="text-center shadow-sm">
                       <DropdownItem
                         style={{ cursor: "pointer" }}
-                        onClick={() => history.push("/auth/myprofile")}
+                        onClick={() => history.push("/auth/profile")}
                       >
                         <div style={{ fontWeight: 575, color: "#505051" }}>
                           Meu Perfil
@@ -164,7 +157,7 @@ export default function AdminNavbar() {
                       </DropdownItem>
                       <DropdownItem
                         style={{ cursor: "pointer" }}
-                        onClick={() => history.push("/auth/myadverts")}
+                        onClick={() => history.push("/auth/profile")}
                       >
                         <div style={{ fontWeight: 575, color: "#505051" }}>
                           Meus Anúncios
@@ -172,7 +165,7 @@ export default function AdminNavbar() {
                       </DropdownItem>
                       <DropdownItem
                         style={{ cursor: "pointer" }}
-                        onClick={() => history.push("/auth/mythrow")}
+                        onClick={() => history.push("/auth/wishlist")}
                       >
                         <div style={{ fontWeight: 575, color: "#505051" }}>
                           Meus Lances
@@ -201,20 +194,35 @@ export default function AdminNavbar() {
                   </ButtonDropdown>
                 </NavItem>
               ) : (
-                <NavItem>
-                  <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    onClick={() => history.push("/auth/login")}
-                    style={{
-                      backgroundColor: "#3C64B1",
-                      border: 0,
-                      color: "#fff",
-                    }}
-                  >
-                    <span className="nav-link-inner--text">ENTRAR</span>
+                <>
+                  <NavItem>
+                    <Button
+                      className="btn-neutral btn-icon bg-primary"
+                      color="default"
+                      onClick={() => history.push("/auth/login")}
+                      style={{
+                        backgroundColor: "#3C64B1",
+                        border: 0,
+                        color: "#fff",
+                      }}
+                      >
+                      <span className="nav-link-inner--text">ENTRAR</span>
+                    </Button>
+                  </NavItem>
+                  <NavItem>
+                    <Button
+                      className="ml-2 btn-neutral btn-icon bg-primary"
+                      color="default"
+                      onClick={() => history.push("/auth/register")}
+                      style={{
+                        border: 0,
+                        color: "#fff",
+                      }}
+                      >
+                      <span className="nav-link-inner--text">CADASTRAR</span>
                   </Button>
-                </NavItem>
+                  </NavItem>
+                </>
               )}
             </Nav>
           </Collapse>

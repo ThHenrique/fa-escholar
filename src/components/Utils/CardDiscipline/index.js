@@ -29,6 +29,7 @@ const CardDiscipline = ({ discipline, premium, icon, wishlist, about }) => {
           <Card
             className="Card shadow-sm center"
             style={{ aspectRatio: "16:10", cursor: "pointer" }}
+            onClick={() => history.push(`/auth/saleDiscipline/${discipline.discipline_id}`)}
           >
             <CardImg
               id="background"
