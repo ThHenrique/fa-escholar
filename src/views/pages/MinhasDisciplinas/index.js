@@ -12,14 +12,28 @@ import {
 
 import CardDiscipline from "../../../components/Utils/CardDiscipline";
 import CardProfile from "../../../components/Utils/CardProfile";
-import api from '../../../services/api'
+import api from "../../../services/api"
 
-export default function MyDiscipline() {
-  const [displines, setDisplines] = useState([]);
+// NÃO SUBIR (Feito de teste)
+
+export default function MyDisciplines() {
+  const [disciplines, setDisciplines] = useState([]);
   const [w, setW] = useState("");
 
+  async function getDiscipline() {
+    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYwNDY4MjQwMSwiZXhwIjoxNjA1NTQ2NDAxfQ.N0LsXm5KOfJH1ZnmBtuqekCLwVw_smQ0QDeSss3oE0o"
+    const {data} = await api.get("purchase/getHist/1", {
+      headers:{
+        Authorization:`Bearer ${token}`
+      }}
+    )
+    setDisciplines(data)
+  }
+
+
   useEffect(() => {
-    setW(window.innerWidth);
+    getDiscipline()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -31,7 +45,7 @@ export default function MyDiscipline() {
           Authorization: `Bearer ${token}`,
         },
       })
-      setDisplines(data.discipline);
+      setDisciplines(data.discipline);
     })()
   }, [])
 
@@ -40,7 +54,7 @@ export default function MyDiscipline() {
       <Container className="mt-5">
         <Row>
           <Col lg="3" md="6">
-            <CardProfile profile={displines} />
+            <CardProfile profile={disciplines} />
           </Col>
           <Col lg="9">
             <Col md={4}>
@@ -57,13 +71,13 @@ export default function MyDiscipline() {
                 </InputGroup>
               </FormGroup>
             </Col>
-            <Row>
-              {displines.map((item) => (
-                <Col lg={w > 1245 ? "4" : "6"} className="mb-5">
-                  <CardDiscipline discipline={item.discipline} />
-                </Col>
+            <Col lg="8">
+              {disciplines.map(item => (
+                <Row>
+                  <CardDiscipline discipline={item} />
+                </Row>
               ))}
-            </Row>
+            </Col>
           </Col>
         </Row>
       </Container>
