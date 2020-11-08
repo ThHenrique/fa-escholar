@@ -6,6 +6,7 @@ import Profile from "views/pages/Profile"
 import ShoppingCart from "views/pages/ShoppingCart"
 import Login from "views/pages/Login";
 import Cadastro from "views/pages/Cadastro";
+import Pagamento from "views/pages/Pagamento";
 
 const routes = [
   {
@@ -63,7 +64,13 @@ const routes = [
         icon: "ni ni-circle-08 text-pink",
         component: Cadastro,
         layout: "/auth"
-      }
+      },
+      {
+        path: "/payment",
+        name: "Pagamento",
+        component: Pagamento,
+        layout: "/auth"
+      },
     ],
   },
 ];
