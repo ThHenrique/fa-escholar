@@ -4,6 +4,8 @@ import MinhasDisciplinas from "views/pages/MinhasDisciplinas";
 import HistCompras from "views/pages/HistCompras";
 import Login from "views/pages/Login";
 import Cadastro from "views/pages/Cadastro";
+import SaleDiscipline from "views/pages/SaleDiscipline";
+
 
 const routes = [
   {
@@ -34,6 +36,12 @@ const routes = [
         path: "/hist",
         name: "Histórico de compras",
         component: HistCompras,
+        layout: "/auth",
+      },
+      {
+        path: "/saleDiscipline/:id",
+        name: "Venda da disciplina",
+        component: SaleDiscipline,
         layout: "/auth",
       },
       {

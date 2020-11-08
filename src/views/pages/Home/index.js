@@ -6,33 +6,21 @@ import {
 
 import { useHistory } from "react-router-dom";
 
-export default function Home() {
-  const [array, setArray] = useState([]);
+import api from "../../../services/api"
 
-  const allowedState = [
-    {
-      id: 1, name: "Português: Pontuação", alunos: 59, lucro: 299.00, uri: "https://s3.amazonaws.com/midia.korntraducoes.com.br/wp-content/uploads/2018/06/14103621/Depositphotos_68180183_original.jpg",
-    },
-    {
-      id: 2, name: "Matemática", alunos: 99, lucro: 475.00, uri: "https://sto-blog.s3.amazonaws.com/images/2018/06/13/matematica-o-guia-completo.jpg",
-    },
-    {
-      id: 3, name: "Inglês", alunos: 159, lucro: 799.00, uri: "https://www.fapcom.edu.br/wp-content/uploads/2019/02/Dicas-para-melhorar-o-ingl%C3%AAs-1-750x500.jpeg",
-    },
-    {
-      id: 2, name: "Hadware", alunos: 99, lucro: 475.00, uri: "https://i.ytimg.com/vi/IfpbpvP-FgU/maxresdefault.jpg",
-    },
-    {
-      id: 3, name: "Lógica de programação", alunos: 159, lucro: 799.00, uri: "https://becode.com.br/wp-content/uploads/2016/06/Algoritmos-1.jpg",
-    },
-  ];
+export default function Home() {
+  const [discipline, setDiscipline] = useState([]);
+  const history = useHistory();
+
+  async function getDiscipline() {
+    const response = await api.get('discipline/index')
+    setDiscipline(response.data)
+  }
 
   useEffect(() => {
-    setArray(allowedState);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    getDiscipline()
+  }, [])
 
-  const history = useHistory();
   return (
     <>
       <Container fluid className="mb-5">
@@ -60,21 +48,21 @@ export default function Home() {
               Disciplinas
             </h1>
           </div>
-          {array.map((item) => (
+          {discipline.map((item) => (
             <>
               <Card
                 key={item.id}
                 className="pt-5 pb-5 mt-3 border-0 bg-transparent"
-                onClick={(e) => history.push(e.id)}
+                onClick={() => history.push(`saleDiscipline/${item.id}`)}
                 style={{ cursor: "pointer" }}
               >
                 <Row className=" justify-content-center align-items-center">
                   <Col lg="3" md="6" className="d-flex justify-content-center">
                     <CardImg
                       id="background"
-                      className={item.uri ? "has-background" : ""}
+                      className={item.image ? "has-background" : ""}
                       style={{
-                        backgroundImage: `url(${item.uri})`,
+                        backgroundImage: `url(${item.image})`,
                         width: 200,
                         height: 200,
                         backgroundSize: "cover",

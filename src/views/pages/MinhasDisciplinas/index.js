@@ -12,34 +12,28 @@ import {
 
 import CardDiscipline from "../../../components/Utils/CardDiscipline";
 import CardProfile from "../../../components/Utils/CardProfile";
+import api from '../../../services/api'
 
-export default function WishList() {
+export default function MyDiscipline() {
   const [displines, setDisplines] = useState([]);
   const [w, setW] = useState("");
 
-  const allowedState = [
-    {
-      id: 1, name: "Português: Pontuação", alunos: 59, lucro: 299.00, uri: "https://s3.amazonaws.com/midia.korntraducoes.com.br/wp-content/uploads/2018/06/14103621/Depositphotos_68180183_original.jpg",
-    },
-    {
-      id: 2, name: "Matemática", alunos: 99, lucro: 475.00, uri: "https://sto-blog.s3.amazonaws.com/images/2018/06/13/matematica-o-guia-completo.jpg",
-    },
-    {
-      id: 3, name: "Inglês", alunos: 159, lucro: 799.00, uri: "https://www.fapcom.edu.br/wp-content/uploads/2019/02/Dicas-para-melhorar-o-ingl%C3%AAs-1-750x500.jpeg",
-    },
-    {
-      id: 2, name: "Hadware", alunos: 99, lucro: 475.00, uri: "https://i.ytimg.com/vi/IfpbpvP-FgU/maxresdefault.jpg",
-    },
-    {
-      id: 3, name: "Lógica de programação", alunos: 159, lucro: 799.00, uri: "https://becode.com.br/wp-content/uploads/2016/06/Algoritmos-1.jpg",
-    },
-  ];
+  useEffect(() => {
+    setW(window.innerWidth);
+  }, []);
 
   useEffect(() => {
-    setDisplines(allowedState);
-    setW(window.innerWidth);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    (async () => {
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIxLCJpYXQiOjE2MDQwMzA0ODksImV4cCI6MTYwNDg5NDQ4OX0.boUGnnJhkD-JoHg_JqNvJNqcM7YmNZAoXA712qMDjdA"
+
+      const { data } = await api.get('purchase/index/1', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setDisplines(data.discipline);
+    })()
+  }, [])
 
   return (
     <>
@@ -66,7 +60,7 @@ export default function WishList() {
             <Row>
               {displines.map((item) => (
                 <Col lg={w > 1245 ? "4" : "6"} className="mb-5">
-                  <CardDiscipline discipline={item} />
+                  <CardDiscipline discipline={item.discipline} />
                 </Col>
               ))}
             </Row>

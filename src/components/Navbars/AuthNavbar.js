@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 // reactstrap components
 import {
@@ -18,24 +18,39 @@ import {
 } from "reactstrap";
 
 import ModalLogin from "../Utils/ModalLogin";
+import api from '../../services/api'
 
 export default function AdminNavbar() {
   const [authUser, setAuthUser] = useState("");
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
   const [dropdownOpen, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [modal, setModal] = useState(false);
   const [path, setPath] = useState("");
 
   const history = useHistory();
+  const token = localStorage.getItem('token');
 
   const toggle = () => setOpen(!dropdownOpen);
   const toggle2 = () => setIsOpen(!isOpen);
 
+  useEffect(() => {
+    // setToken(localStorage.getItem("token"));
+    async function getUserName() {
+      if (token) {
+        const response = await api.get('/clientAuth/getUser', {
+          headers: { Authorization: `Bearer ${token}`}
+        })
+        setAuthUser(response.data.name);
+      }
+    }
+    getUserName();
+  }, []);
+
   async function handleLogin(redirect) {
     setPath(redirect);
     setModal(!modal);
-    setToken();
+    // setToken();
     setAuthUser();
   }
 
@@ -75,40 +90,47 @@ export default function AdminNavbar() {
                   </span>
                 </Link>
               </NavItem>
-              <NavItem>
-                <Link to="/auth/mydiscipline">
-                  <span className={getActiveItem("/auth/mydiscipline")}>
-                    Minhas Disciplinas
-                  </span>
-                </Link>
-              </NavItem>
-              {token ? (
-                <NavItem>
-                  <Link to="/auth/wishlist">
-                    <span className={getActiveItem("/auth/wishlist")}>
+              {token && (
+                <>
+                  <NavItem>
+                    <Link to="/auth/mydiscipline">
+                      <span className={getActiveItem("/auth/mydiscipline")}>
+                        Minhas Disciplinas
+                      </span>
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/auth/wishlist">
+                      <span className={getActiveItem("/auth/wishlist")}>
+                        Lista de Desejo
+                      </span>
+                    </Link>
+                  </NavItem>
+                  <NavItem>
+                    <span
+                      className={getActiveItem("/auth/wishlist")}
+                      style={{ cursor: "pointer" }}
+                    >
                       Lista de Desejo
                     </span>
-                  </Link>
-                </NavItem>
-              ) : (
-                <NavItem>
-                  <span
-                    className={getActiveItem("/auth/wishlist")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Lista de Desejo
-                  </span>
-                </NavItem>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/auth/throw">
+                      <span className={getActiveItem("/auth/throw")}>
+                        Perfil
+                      </span>
+                    </Link>
+                  </NavItem>
+                </>
               )}
-              <NavItem>
-                <Link to="/auth/throw">
-                  <span className={getActiveItem("/auth/throw")}>
-                    Perfil
-                  </span>
-                </Link>
-              </NavItem>
             </Nav>
             <Nav className="d-flex">
+              <Button
+                className="btn-icon btn-3 fa fa-shopping-cart"
+                color="primary"
+                type="button"
+              >
+              </Button>
               {token ? (
                 <NavItem className="justify-content-end">
                   <ButtonDropdown
@@ -117,12 +139,12 @@ export default function AdminNavbar() {
                     style={{ zIndex: 4 }}
                   >
                     <DropdownToggle
+                      className="bg-primary"
                       caret
                       style={{
                         borderRadius: 2,
                         border: 30,
                         color: "#fff",
-                        backgroundColor: "#fdbd5c",
                       }}
                     >
                       Olá,
@@ -180,12 +202,6 @@ export default function AdminNavbar() {
                 </NavItem>
               ) : (
                 <NavItem>
-                  <Button
-                    className="btn-icon btn-3 fa fa-shopping-cart" 
-                    color="primary" 
-                    type="button"   
-                  >
-                  </Button>
                   <Button
                     className="btn-neutral btn-icon"
                     color="default"

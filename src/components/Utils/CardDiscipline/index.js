@@ -51,6 +51,7 @@ const CardDiscipline = ({ discipline, premium, icon }) => {
               }}
             >
               {discipline.name}
+              {console.log(discipline)}
             </p>
           </Col>
           <Col>
@@ -78,8 +79,8 @@ const CardDiscipline = ({ discipline, premium, icon }) => {
           </p>
           <span mt="2" mb="2" style={{ fontWeight: "bold", fontSize: 18 }}>
             R$
-            {" "}
-            {(234.78).toLocaleString("pt-br", { minimumFractionDigits: 0 })}
+            {discipline.price}
+            {/* {(discipline.price).toLocaleString("pt-br", { minimumFractionDigits: 0 })} */}
           </span>
         </Row>
       </CardBody>
