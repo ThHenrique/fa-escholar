@@ -5,7 +5,9 @@ import HistCompras from "views/pages/HistCompras";
 import Login from "views/pages/Login";
 import Cadastro from "views/pages/Cadastro";
 import SaleDiscipline from "views/pages/SaleDiscipline";
-
+import Profile from "views/pages/Profile"
+import ShoppingCart from "views/pages/ShoppingCart"
+import Pagamento from "views/pages/Pagamento";
 
 const routes = [
   {
@@ -45,6 +47,19 @@ const routes = [
         layout: "/auth",
       },
       {
+        path: "/profile",
+        name: "Perfil",
+        component: Profile,
+        layout: "/auth",
+      },
+
+      {
+        path: "/shoppingcart",
+        name: "Carrinho de Compras",
+        component: ShoppingCart,
+        layout: "/auth",
+      },
+      {
         path: "/login",
         name: "Login",
         icon: "ni ni-key-25 text-info",
@@ -57,8 +72,14 @@ const routes = [
         icon: "ni ni-circle-08 text-pink",
         component: Cadastro,
         layout: "/auth"
+      },
+      {
+        path: "/payment",
+        name: "Pagamento",
+        component: Pagamento,
+        layout: "/auth"
       }
-    ],
-  },
-];
+    ]
+  }
+]
 export default routes;

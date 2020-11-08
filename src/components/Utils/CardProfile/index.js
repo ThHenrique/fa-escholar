@@ -33,14 +33,14 @@ const CardProfile = ({ profile }) => (
       />
     </CardHeader>
 
-    <Col lg="12" className="justify-content-end text text-justify">
+    <Col lg="12">
       <CardBody className="mt--3">
-        <CardText className="px-lg-1">
+        <CardText>
           <div className="mt-4">
             <i className="ni ni-circle-08 mr-2 text-blue" />
             <Link
               style={{ cursor: "pointer" }}
-              to="/auth/mydiscipline"
+              to="/auth/profile"
             >
               <span className="text-dark">Editar Perfil</span>
             </Link>
@@ -55,7 +55,7 @@ const CardProfile = ({ profile }) => (
               to="/auth/hist"
             >
               <i className="ni ni-notification-70 mr-2 text-blue" />
-              <span className="text-dark">Histórico de Compras</span>
+              <span className="text-dark text-left">Compras Anteriores</span>
             </Link>
             <br />
             <Link
