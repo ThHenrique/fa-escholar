@@ -13,11 +13,22 @@ import {
 
 import CardProfile from "../../../components/Utils/CardProfile";
 import CardDiscipline from "../../../components/Utils/CardDiscipline";
+import api from "services/api";
 
-export default function WishList() {
+export default function HistCompras() {
   const [user, setUser] = useState([]);
-  const [discipline, setDisplines] = useState([]);
+  const [discipline, setDiscipline] = useState([]);
   const [w, setW] = useState("");
+
+  async function getHist(){
+    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYwNDY4MjQwMSwiZXhwIjoxNjA1NTQ2NDAxfQ.N0LsXm5KOfJH1ZnmBtuqekCLwVw_smQ0QDeSss3oE0o"
+    const {data} = await api.get("purchase/getHist/1", {
+      headers:{
+        Authorization:`Bearer ${token}`
+      }}
+    )
+    setDiscipline(data)
+  }
 
   const allowedState = [
     {
@@ -39,8 +50,8 @@ export default function WishList() {
 
   useEffect(() => {
     setUser(allowedState);
-    setDisplines(allowedState);
     setW(window.innerWidth);
+    getHist()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,14 +77,12 @@ export default function WishList() {
                 </InputGroup>
               </FormGroup>
             </Col>
-            <Col lg="12">
-              <Row>
-                {discipline.map((item) => (
-                  <Col lg={w > 1245 ? "4" : "6"} className="mb-5">
-                    <CardDiscipline discipline={item} />
-                  </Col>
-                ))}
-              </Row>
+            <Col lg="8">
+              {discipline.map(item => (
+                <Row>
+                  <CardDiscipline discipline={item} />
+                </Row>
+              ))}
             </Col>
           </Col>
         </Row>

@@ -14,9 +14,10 @@ import {
 
 import CardDiscipline from "../../../components/Utils/CardDiscipline";
 import CardProfile from "../../../components/Utils/CardProfile";
+import api from "../../../services/api"
 
 export default function WishList() {
-  const [displines, setDisplines] = useState([]);
+  const [disciplines, setDisciplines] = useState([]);
   const [w, setW] = useState("");
   const allowedState = [
     {
@@ -36,8 +37,18 @@ export default function WishList() {
     },
   ];
 
+  async function getWishlist() {
+    const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYwNDY4MjQwMSwiZXhwIjoxNjA1NTQ2NDAxfQ.N0LsXm5KOfJH1ZnmBtuqekCLwVw_smQ0QDeSss3oE0o"
+    const {data} = await api.get("purchase/getHist/1", {
+      headers:{
+        Authorization:`Bearer ${token}`
+      }}
+    )
+    setDisciplines(data)
+  }
+
   useEffect(() => {
-    setDisplines(allowedState);
+    getWishlist();
     setW(window.innerWidth);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -46,7 +57,7 @@ export default function WishList() {
       <Container className="mt-5">
         <Row>
           <Col lg="3" md="6">
-            <CardProfile profile={displines} />
+            <CardProfile profile={disciplines} />
           </Col>
           <Col lg="9">
             <Col md={6}>
@@ -63,13 +74,15 @@ export default function WishList() {
                 </InputGroup>
               </FormGroup>
             </Col>
-            <Row>
-              {displines.map((item) => (
-                <Col lg={w > 1245 ? "4" : "6"} className="mb-5">
-                  <CardDiscipline discipline={item} icon={item.icon} />
-                </Col>
+            <Col lg="8">
+              {disciplines.map(item => (
+                <Row>
+                  <CardDiscipline
+                    wishlist
+                    discipline={item} />
+                </Row>
               ))}
-            </Row>
+            </Col>
           </Col>
         </Row>
       </Container>
