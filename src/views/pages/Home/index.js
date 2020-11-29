@@ -25,40 +25,37 @@ export default function Home() {
 
   return (
     <>
-      <Container fluid className="mb-5">
-        <Row className="align-items-center pt-8 pb-8" style={{ background: "#F3F6FA" }}>
-          <Col md={6} sm={12}>
+      <Container fluid className>
+        <Row className="align-items-center pt-6 pb-4" style={{ background: "#F3F6FA" }}>
+
+          <Col className="ml-6" md={3} sm={8} >
             <div
+
               id="background"
               className={image ? "has-background" : ""}
               style={{
                 backgroundImage: `url(${image})`,
-                height: 412, width: 535,
+                height: 260, width: 350,
                 backgroundSize: "contain",
                 backgroundRepeat: "no-repeat",
               }}
             />
           </Col>
-          <Col md={6} sm={12}>
-            <h3 className="text-primary mb-3">
-              Sobre nós
-            </h3>
+          <Col md={6} sm={1}>
+
             <h1 className="mb-3">
-              E-SCHOLAR
+              Primeira vez por aqui?
             </h1>
-            <div className="mb-5 h4 text-light ls-1">
-              Et has minim elitr intellegat. Mea aeterno eleifend antiopam ad,
-              nam no suscipit quaerendum. At nam minimum ponderum.
-              Est audiam animal molestiae te. Ex duo eripuit mentitum.
-            </div>
-            <Button color="primary" outline type="button">Contato</Button>
-          </Col>
+            <h2 className="mb-3">
+              Cadastre-se agora mesmo e receba um cupom de desconto para a primeira compra!
+            </h2>
+         </Col>
         </Row>
 
         <Col className="mt-6">
-          <div style={{ marginLeft: 20, marginTop: 20 }}>
+          <div style={{ marginLeft: 340, marginTop: 20 }}>
             <h1 style={{ color: "#828282", fontWeight: "bold", fontSize: 20 }}>
-              Disciplinas
+              Disciplinas:
             </h1>
           </div>
           {discipline.map(discipline => (
