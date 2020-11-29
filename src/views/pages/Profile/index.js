@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 
 import {
     Container,
@@ -6,62 +6,52 @@ import {
     Row,
     Button,
     Input,
-    Form
+    Form,
+    Alert
 } from 'reactstrap'
 
+import NumberFormat from "react-number-format";
+import NotificationAlert from "react-notification-alert";
+
 import api from '../../../services/api'
+import apiCep from '../../../services/cep';
 
 import CardProfile from '../../../components/Utils/CardProfile'
 
 export default function Profile (){
-  const [displines, setDisplines] = useState([]);
   const [name, setName] = useState('')
-  const [socialName, setSocialname] = useState('')
+  const [email, setEmail] = useState('')
+  const [CPF, setCpf] = useState('')
+  const [cellphone, setCellphone] = useState('')
+  const [birthday, setBirthday] = useState('')
+  const [zipCode, setZipCode] = useState('')
   const [city, setCity] = useState('')
   const [street, setStreet] = useState('')
-  const [birthday, setBirthday] = useState('')
-  const [cellphone, setCellphone] = useState('')
-  const [complement, setComplement] = useState('')
-  const [CPF, setCpf] = useState('')
   const [district, setDistrict] = useState('')
-  const [email, setEmail] = useState('')
+  const [complement, setComplement] = useState('')
   const [number, setNumber] = useState('')
   const [state, setState] = useState('')
-  const [zipCode, setZipCode] = useState('')
+  const [zipCodeError, setZipCodeError] = useState(false)
+  const [cityError, setCityError] = useState('')
+  const [streetError, setStreetError] = useState('')
+  const [districtError, setDistrictError] = useState('')
+  const [complementError, setComplementError] = useState('')
+  const [numberError, setNumberError] = useState('')
+  const [stateError, setStateError] = useState('')
 
+  const username = localStorage.getItem('username');
 
-    const allowedState = [
-    {
-      id: 1, name: "Português: Pontuação", alunos: 59, lucro: 299.00, uri: "https://s3.amazonaws.com/midia.korntraducoes.com.br/wp-content/uploads/2018/06/14103621/Depositphotos_68180183_original.jpg",
-    },
-    {
-      id: 2, name: "Matemática", alunos: 99, lucro: 475.00, uri: "https://sto-blog.s3.amazonaws.com/images/2018/06/13/matematica-o-guia-completo.jpg",
-    },
-    {
-      id: 3, name: "Inglês", alunos: 159, lucro: 799.00, uri: "https://www.fapcom.edu.br/wp-content/uploads/2019/02/Dicas-para-melhorar-o-ingl%C3%AAs-1-750x500.jpeg",
-    },
-    {
-      id: 2, name: "Hadware", alunos: 99, lucro: 475.00, uri: "https://i.ytimg.com/vi/IfpbpvP-FgU/maxresdefault.jpg",
-    },
-    {
-      id: 3, name: "Lógica de programação", alunos: 159, lucro: 799.00, uri: "https://becode.com.br/wp-content/uploads/2016/06/Algoritmos-1.jpg",
-    },
+  const inputRef = useRef("notificationAlert");
 
-  ];
+  useEffect(() => {
+    getUser()
+  }, []);
 
   async function getUser() {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYwNDY3OTE3NywiZXhwIjoxNjA1NTQzMTc3fQ.MFgNCF8iT3nsNF2j1OWv0F78HqONIsbJ20D4WC92By0'
-    const response = await api.get('clientAuth/getUser', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-
-    })
-    console.log(response.data)
+    const response = await api.get('clientAuth/getUser')
     setName(response.data.name)
     setCity(response.data.city)
-    // setSocialname(response.data.Socialname)
-    setStreet(response.data.street)
+    setStreet(response.data.address)
     setBirthday(response.data.birthday)
     setCellphone(response.data.cellphone)
     setComplement(response.data.complement)
@@ -76,165 +66,237 @@ export default function Profile (){
   async function handleUpdate(e){
     e.preventDefault()
 
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImlhdCI6MTYwNDY3OTE3NywiZXhwIjoxNjA1NTQzMTc3fQ.MFgNCF8iT3nsNF2j1OWv0F78HqONIsbJ20D4WC92By0'
-
-    const data = {
-      name,
-      city,
-      // street,
-      birthday,
-      cellphone,
-      complement,
-      cpf: CPF,
-      zip_code: zipCode,
-      district,
-      number,
-      state
-
+    try {
+      const data = {
+        name,
+        city,
+        address: street,
+        birthday,
+        cellphone,
+        complement,
+        cpf: CPF,
+        zip_code: zipCode,
+        district,
+        number,
+        state
+      }
+      await api.put('clientAuth/update', data)
+      notify("fas fa-check", "success", "Sucesso! ", " Perfil Atualizado ");
+    } catch (error) {
+      notify("fas fa-times", "danger", "Erro!", "Ocorreu um erro ao atualizar o Perfil.");
     }
-    const response = await api.put('clientAuth/update/1', data, {
-
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-
-    })
-
-    console.log(response.data)
   }
 
-  useEffect(() => {
-    setDisplines(allowedState);
-    getUser()
-  }, []);
-    return (
-        <Container className="mt-3">
-          <Row>
-            <Col lg="3" md="4">
-              <CardProfile profile={displines} />
+  async function searchZipCodeAddress() {
+    try {
+      resetFields();
+      const response = await apiCep.get(`/${zipCode}/json`);
+
+      const {logradouro, bairro, localidade, uf} = response.data;
+
+      if (response.data.erro) {
+        setZipCode('');
+        notify("fas fa-times", "warning", "", "Endereço não encontrado");
+      } else {
+        setStreet(logradouro);
+        setDistrict(bairro);
+        setCity(localidade);
+        setState(uf);
+        clearError();
+      }
+    } catch (err) {
+      console.log(err);
+      setZipCode('');
+    }
+  }
+
+  const clearError = () => {
+    setZipCodeError(false);
+    setStateError('');
+    setCityError('');
+    setDistrictError('');
+    setStreetError('');
+    setNumberError('');
+  };
+
+  const resetFields = () => {
+    setState('');
+    setCity('');
+    setDistrict('');
+    setStreet('');
+    setNumber('');
+    setComplement('');
+  };
+
+  const notify = (icon, type, title, message) => {
+    const options = {
+      place: "tr",
+      message: (
+        <div className="alert-text">
+          <span className="alert-title ml-2" data-notify="title">
+            {" "}
+            {title}
+          </span>
+          <span data-notify="message" className="ml-2">
+            {message}
+          </span>
+        </div>
+      ),
+      type,
+      icon,
+      autoDismiss: 2,
+    };
+    inputRef.current.notificationAlert(options);
+  };
+
+  return (
+    <Container className="mt-3">
+      <div className="rna-wrapper">
+        <NotificationAlert ref={inputRef} />
+      </div>
+      <Row>
+        <Col lg="3" md="4">
+          <CardProfile username={username} />
+        </Col>
+        <Col md={8} className="d-flex justify-content-center">
+          <form onSubmit={handleUpdate}>
+
+              <h3 className='text-dark m-1'>
+                Dados Pessoais
+              </h3>
+            <Input
+              className='mb-2'
+              placeholder='Nome Completo'
+              type='text'
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+            <NumberFormat
+              format="###.###.###-##"
+              className="form-control mb-2"
+              placeholder="000.000.000-00"
+              id="example-number-input"
+              value={CPF}
+              onChange={e => setCpf(e.target.value)}
+            />
+            <Row>
+              <Col>
+                <Input
+                  className= 'mb-2'
+                  placeholder='Data de nascimento'
+                  type='date'
+                  value={birthday}
+                  onChange={e => setBirthday(e.target.value)}
+                />
+              </Col>
+              <Col>
+                <NumberFormat
+                  format="(##) #####-####"
+                  className="form-control mb-2"
+                  placeholder='Telefone/Whatsapp'
+                  value={cellphone}
+                  onChange={e => setCellphone(e.target.value)}
+                  />
+              </Col>
+            </Row>
+            <Input
+              className= 'mb-2'
+              placeholder='E-mail'
+              type='email'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              disabled
+            />
+            <Row>
+              <Col md={9}>
+                <NumberFormat
+                  format="#####-###"
+                  className="form-control mb-2"
+                  placeholder="Informe seu CEP"
+                  id="example-number-input"
+                  value={zipCode}
+                  onChange={event => setZipCode(event.target.value)}
+                />
+              </Col>
+              <Col md={2} className="align-self-center">
+                <Button
+                  className="btn-icon btn-3"
+                  size="sm"
+                  color="primary"
+                  type="button"
+                  onClick={() => searchZipCodeAddress()}
+                  >
+                    <span className="btn-inner--icon">
+                      <i className="fa fa-search mr-2" />
+                      Buscar
+                    </span>
+                </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={3}>
+                <Input
+                  maxLength={2}
+                  className='mb-2'
+                  placeholder='Estado'
+                  type='text'
+                  value={state}
+                  onChange={e => setState(e.target.value)}
+                  />
+              </Col>
+              <Col md={9}>
+                <Input
+                  className= 'mb-2'
+                  placeholder='Rua'
+                  type='text'
+                  value={street}
+                  onChange={e => setStreet(e.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Input
+                  className= 'mb-2'
+                  placeholder='Número'
+                  type='text'
+                  value={number}
+                  onChange={e => setNumber(e.target.value)}
+                />
+              </Col>
+              <Col>
+                <Input
+                  className= 'mb-2'
+                  placeholder='Complemento/Bl/Apto'
+                  type='text'
+                  value={complement}
+                  onChange={e => setComplement(e.target.value)}
+                />
+              </Col>
+            </Row>
+            <Input
+              className= 'mb-2'
+              placeholder='Bairro'
+              type='text'
+              value={district}
+              onChange={e => setDistrict(e.target.value)}
+            />
+            <Input
+              className= 'mb-2'
+              placeholder='Cidade'
+              type='text'
+              value={city}
+              onChange={e => setCity(e.target.value)}
+            />
+
+            <Col className='d-flex justify-content-end m-4'>
+              <Button color="primary" outline type="submit">
+                  Salvar Alterações
+              </Button>
             </Col>
-            <Col md={8} className="d-flex justify-content-center">
-                <form onSubmit={handleUpdate}>
-                  <h3 className='text-dark m-1'>
-                    Dados Pessoais
-                  </h3>
-                    <Input
-                      className='mb-2'
-                      placeholder='Nome Completo'
-                      type='text'
-                      value={name}
-                      onChange={e => setName(e.target.value)}
-                     />
-                    <Input
-                      className= 'mb-2'
-                      placeholder='Como deseja ser chamado(a)'
-                      type='text'
-                      value={socialName}
-                      onChange={e => setSocialname(e.target.value)}
-                     />
-                    <Input maxLength='14'
-                      className= 'mb-2'
-                      placeholder='CPF'
-                      type='text'
-                      value={CPF}
-                      onChange={e => setCpf(e.target.value)}
-                      />
-                    <Row>
-                      <Col>
-                        <Input
-                          className= 'mb-2'
-                          placeholder='Data de nascimento'
-                          type='date'
-                          value={birthday}
-                          onChange={e => setBirthday(e.target.value)}
-                        />
-                      </Col>
-                      <Col>
-                        <Input maxLength='14'
-                          className= 'mb-2'
-                          placeholder='Telefone/Whatsapp'
-                          type='tel'
-                          value={cellphone}
-                          onChange={e => setCellphone(e.target.value)}
-                         />
-                      </Col>
-                    </Row>
-                    <Input
-                      className= 'mb-2'
-                      placeholder='E-mail'
-                      type='email'
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      />
-                    <Input
-                      className= 'mb-2'
-                      placeholder='Rua'
-                      type='text'
-                      value={street}
-                      onChange={e => setStreet(e.target.value)}
-                      />
-                     <Row>
-                      <Col>
-                        <Input
-                          className= 'mb-2'
-                          placeholder='Número'
-                          type='text'
-                          value={number}
-                          onChange={e => setNumber(e.target.value)}
-                        />
-                      </Col>
-                      <Col>
-                        <Input
-                          className= 'mb-2'
-                          placeholder='Complemento/Bl/Apto'
-                          type='text'
-                          value={complement}
-                          onChange={e => setComplement(e.target.value)}
-                         />
-                      </Col>
-                    </Row>
-                    <Input
-                      className= 'mb-2'
-                      placeholder='Bairro'
-                      type='text'
-                      value={district}
-                      onChange={e => setDistrict(e.target.value)}
-                      />
-                    <Input
-                      className= 'mb-2'
-                      placeholder='Cidade'
-                      type='text'
-                      value={city}
-                      onChange={e => setCity(e.target.value)}
-                      />
-                    <Row>
-                      <Col>
-                        <Input maxLength='10'
-                          className= 'mb-2'
-                          placeholder='CEP'
-                          type='text'
-                          value={zipCode}
-                          onChange={e => setZipCode(e.target.value)}
-                        />
-                      </Col>
-                      <Col>
-                        <Input
-                          className= 'mb-2'
-                          placeholder='Estado'
-                          type='text'
-                          value={state}
-                          onChange={e => setState(e.target.value)}
-                         />
-                      </Col>
-                    </Row>
-                    <Col className='d-flex justify-content-end m-4'>
-                      <Button color="primary" outline type="submit">
-                          Salvar Alterações
-                      </Button>
-                    </Col>
-                </form>
-            </Col>
-          </Row>
-        </Container>
-    )
+          </form>
+        </Col>
+      </Row>
+    </Container>
+  )
 }

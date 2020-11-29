@@ -69,6 +69,7 @@ export default function Login() {
         localStorage.removeItem('remember');
       }
       localStorage.setItem('token', token);
+
       history.push('/');
     } catch (error) {
       console.log(error);
@@ -157,8 +158,7 @@ export default function Login() {
                     </a> */}
                     <a
                       className="text-blue"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={e => history.push('/auth/register')}
                     >
                       <medium>Crie uma conta</medium>
                     </a>

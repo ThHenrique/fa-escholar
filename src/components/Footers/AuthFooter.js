@@ -7,18 +7,18 @@ class Login extends React.Component {
     return (
       <>
         <footer style={{ backgroundColor: '#2E2E37' }}
-          className="pt-5 px-6 ml--5 footer"
+          className="pt-5 px-6 ml--5 footer mt-9"
           id="footer-main"
         >
           <Container>
           <Row className="justify-content-center">
-            <Col lg="3">              
+            <Col lg="3">
               <div style={{ fontSize: 13, textAlign: 'justify' }}
                 className="ml-4"
               >
-                Et has minim elitr intellegat. Mea aeterno eleifend antiopam ad, 
-                nam no suscipit quaerendum. At nam minimum ponderum. Est audiam 
-                animal molestiae te. Ex duo eripuit mentitum.                
+                Et has minim elitr intellegat. Mea aeterno eleifend antiopam ad,
+                nam no suscipit quaerendum. At nam minimum ponderum. Est audiam
+                animal molestiae te. Ex duo eripuit mentitum.
               </div>
             </Col>
             <Col>
@@ -40,7 +40,7 @@ class Login extends React.Component {
               <div className="mb-4 font-weight-bold ml-5">
                 NOSSAS MÍDIAS DIGITAIS
                 </div>
-              <Nav style={{ marginLeft: 35 }}>                
+              <Nav style={{ marginLeft: 35 }}>
                 <div className="w-100" />
                 <NavItem>
                   <NavLink
@@ -79,7 +79,7 @@ class Login extends React.Component {
                   </a>
                 </div>
               </Nav>
-            </Col>           
+            </Col>
           </Row>
           <Row className="mb-1">
             <Col className="d-flex justify-content-center">
@@ -88,7 +88,7 @@ class Login extends React.Component {
                 className="text-center"
               >
                 São José dos Campos - SP <br />
-                Desenvolvido por <i class="far fa-copyright"></i> Escholar                
+                Desenvolvido por <i class="far fa-copyright"></i> Escholar
               </div>
             </Col>
           </Row>

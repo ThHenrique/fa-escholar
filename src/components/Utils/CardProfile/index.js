@@ -6,31 +6,20 @@ import {
 
 import { Link } from "react-router-dom";
 
-const CardProfile = ({ profile }) => (
+const CardProfile = ({ username }) => (
   <Card>
-    <CardHeader className="mb-2">
-      <center>
-        <div
-          style={{
-            width: 200,
-            height: 200,
-            backgroundImage: `url(${
-              profile.uri
-            })`,
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-            borderRadius: "50%",
-          }}
-        />
-      </center>
-      <div
-        className="mt-3"
-        style={{
-          cursor: "pointer",
-          fontSize: 12,
-          fontWeight: "600",
-        }}
-      />
+    <CardHeader className="mb-2 ">
+      <Col
+        className="bg-gradient-info rounded-circle img-center shadow shadow-lg--hover
+          d-flex justify-content-center align-items-center
+        "
+        style={{ width: "140px", height: "140px" }}
+      >
+        <big className="text-white" style={{ textTransform: 'uppercase'}}>
+          {username[0]?? '...'}
+          {username[1]?? ''}
+        </big>
+      </Col>
     </CardHeader>
 
     <Col lg="12">

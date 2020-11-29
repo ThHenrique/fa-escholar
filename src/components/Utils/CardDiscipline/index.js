@@ -4,51 +4,45 @@ import {
   Row, Col, Card, CardImg, CardBody, CardFooter, Button
 } from "reactstrap";
 
-const CardDiscipline = ({ discipline, premium, icon, wishlist, about }) => {
+const CardDiscipline = ({
+  discipline,
+  image,
+  wishlist,
+  about,
+  mydiscipline,
+  hist
+}) => {
   const history = useHistory();
 
-  async function handleOpenAd(id) {
-    try {
-      history.push(premium ? `/auth/payment/${premium}/${id}` : `/auth/details/${id}`);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  const [w, setW] = useState("");
-
-  useEffect(() => {
-    console.log(discipline)
-    setW(window.innerWidth);
-  }, []);
-
   return (
-
     <>
       {discipline.map(discipline => (
-        <Col>
+        <Col className="mb-3">
           <Card
             className="Card shadow-sm center"
-            style={{ aspectRatio: "16:10", cursor: "pointer" }}
+            style={{ cursor: "pointer"}}
             onClick={() => history.push(`/auth/saleDiscipline/${discipline.discipline_id}`)}
           >
-            <CardImg
-              id="background"
-              className={discipline.uri ? "has-background" : ""}
-              style={{
-                backgroundImage: `url(${discipline.uri})`,
-                height: 200,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
+            {image && (
+              <CardImg
+                id="background"
+                className={discipline.image ? "has-background" : ""}
+                style={{
+                  backgroundImage: `url(${discipline.image})`,
+                  height: 200,
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+            )}
+
             <CardBody
-              className="text text-left mb--5"
-              onClick={() => handleOpenAd(discipline.id)}
+              className="text text-left"
             >
-              <div style={{ height: 28 }} />
+              {/* <div style={{ height: 28 }} /> */}
               <Row>
                 <Col>
-                  <p
+                  <big
                     className="h4"
                     style={{
                       fontWeight: "bold",
@@ -56,7 +50,7 @@ const CardDiscipline = ({ discipline, premium, icon, wishlist, about }) => {
                     }}
                   >
                     {discipline.name}
-                  </p>
+                  </big>
                 </Col>
                 {wishlist && (
                   <Col>
@@ -65,31 +59,49 @@ const CardDiscipline = ({ discipline, premium, icon, wishlist, about }) => {
                   </Col>
                 )}
               </Row>
-              <Row>
-                <Col>
-                  <p
-                    className="h4"
-                    style={{
-                      fontWeight: "400",
-                    }}
-                  >
-                    {discipline.description}
+              {hist && (
+                <Row>
+                  <Col>
+                    <p className="h4"
+                      style={{
+                        fontWeight: "400",
+                        color: "#205FE5"
+                      }}
+                    >
+                      ID da compra: #{discipline.purchase_id}
+                    </p>
+                  </Col>
+                </Row>
+              )}
+              {mydiscipline  && (
+                <Row>
+                  <Col>
+                    <p className="h4"
+                      style={{
+                        fontWeight: "400",
+                      }}
+                    >
+                      {discipline.description}
+                    </p>
+                  </Col>
+                </Row>
+              )}
+              {!wishlist && (
+                <Row style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <p className="h4 w-100">
+                    <span style={{ color: "#205FE5" }}>Valor: </span>
                   </p>
-                </Col>
-              </Row>
-              <Row style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <p className="h4 w-100">
-                  <span style={{ color: "#205FE5" }}>Valor: </span>
-                </p>
-                <span mt="2" mb="2" style={{ fontWeight: "bold", fontSize: 18 }}>
-                  R$
-                  {' '}
-                  {discipline.price}
-                </span>
-              </Row>
+                  <span mt="2" mb="2" style={{ fontWeight: "bold", fontSize: 18 }}>
+                    {discipline.price.toLocaleString('pt-BR',
+                      { style: 'currency', currency: 'BRL' })
+                    }
+                  </span>
+                </Row>
+              )}
+
               {about && (
                 <span>
-                  Texto super foda que tem quec caspi
+                  {discipline.about}
                 </span>
               )}
             </CardBody>
@@ -104,7 +116,9 @@ const CardDiscipline = ({ discipline, premium, icon, wishlist, about }) => {
                     </Button>
                   </Link>
                   <span>
-                    {discipline.price}
+                    {discipline.price.toLocaleString('pt-BR',
+                      { style: 'currency', currency: 'BRL' })
+                    }
                   </span>
                 </Row>
               </CardFooter>

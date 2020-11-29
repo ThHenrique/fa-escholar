@@ -18,21 +18,17 @@ import api from "../../../services/api"
 
 export default function MyDisciplines() {
   const [disciplines, setDisciplines] = useState([]);
-  const [w, setW] = useState("");
-  const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username');
+
 
   async function getDiscipline() {
-    const {data} = await api.get("purchase/getHist/1", {
-      headers:{
-        Authorization:`Bearer ${token}`
-      }}
-    )
+    const {data} = await api.get("purchase/getHist")
     setDisciplines(data)
+    console.log(data);
   }
 
   useEffect(() => {
     getDiscipline()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -40,7 +36,7 @@ export default function MyDisciplines() {
       <Container className="mt-5">
         <Row>
           <Col lg="3" md="6">
-            <CardProfile profile={disciplines} />
+            <CardProfile username={username} />
           </Col>
           <Col lg="9">
             <Col md={4}>
@@ -57,11 +53,15 @@ export default function MyDisciplines() {
                 </InputGroup>
               </FormGroup>
             </Col>
-            <Col lg="8">
+            <Col md="12">
               {disciplines.map(item => (
-                <Row>
-                  <CardDiscipline discipline={item} />
-                </Row>
+                <div className="card-deck">
+                  <CardDiscipline
+                    discipline={item}
+                    image
+                    mydiscipline
+                  />
+                </div>
               ))}
             </Col>
           </Col>
