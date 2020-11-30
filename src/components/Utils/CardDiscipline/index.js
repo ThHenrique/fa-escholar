@@ -21,8 +21,9 @@ const CardDiscipline = ({
           <Card
             className="Card shadow-sm center"
             style={{ cursor: "pointer"}}
-            onClick={() => history.push(`/auth/saleDiscipline/${discipline.discipline_id}`)}
+            onClick={() => history.push(`/auth/saleDiscipline/${discipline.discipline_id?? discipline.id}`)}
           >
+            {discipline.discipline_id}
             {image && (
               <CardImg
                 id="background"

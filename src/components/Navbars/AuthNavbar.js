@@ -106,15 +106,15 @@ export default function AdminNavbar() {
               )} */}
             </Nav>
             <Nav className="d-flex">
-              <Button
-                className="btn-icon btn-3 fa fa-shopping-cart"
-                color="primary"
-                type="button"
-                onClick={() => history.push("/auth/shoppingcart")}
-              >
-              </Button>
               {token ? (
                 <NavItem className="justify-content-end">
+                  <Button
+                    className="btn-icon btn-3 fa fa-shopping-cart"
+                    color="primary"
+                    type="button"
+                    onClick={() => history.push("/auth/shoppingcart")}
+                  >
+                  </Button>
                   <ButtonDropdown
                     isOpen={dropdownOpen}
                     toggle={toggle}

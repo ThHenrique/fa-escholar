@@ -74,6 +74,77 @@ export default function Payment() {
     }
   }
 
+  // const handleSubmit = useCallback(() => {
+  //   (async () => {
+  //     try {
+  //       setLoading(true);
+  //       const data = {
+  //         vouncherCode: encodeURI(vouncherCode.replace(/^\s+|\s+$/g, '')),
+  //       };
+  //       const schema = Yup.object().shape({
+  //         vouncherCode: Yup.string().required('Informe o Código do Cupom'),
+  //       });
+  //       await schema.validate(data, {
+  //         abortEarly: false,
+  //       });
+
+  //       const {data: isVouncherFirstBuy} = await api.get(
+  //         `/client/checkVouncherFirstBuy?vouncherCode=${data.vouncherCode}`,
+  //       );
+
+  //       if (isVouncherFirstBuy) {
+  //         await api.get(`/client/verifyFirstBuy?orderPrice=${total}`);
+  //       }
+
+  //       const {data: vouncher} = await api.get(
+  //         `client/verifyVouncherCode?vouncherCode=${
+  //           data.vouncherCode
+  //         }&butcheryId=${butcheryId}&orderPrice=${total}`,
+  //       );
+
+  //       setRebate(vouncher.value || (total * vouncher.percent) / 100);
+  //       setObservation(vouncher.observation);
+  //       setVouncherCodeError('');
+  //       if (onVouncher) {
+  //         onVouncher(vouncher);
+  //       }
+  //       setLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //       setLoading(false);
+
+  //       if (REACT_NATIVE_ENV === 'production') {
+  //         Sentry.setTag('api', 'put');
+  //         Sentry.captureException(err);
+  //       }
+
+  //       if (err instanceof Yup.ValidationError) {
+  //         err.inner.forEach(error => {
+  //           switch (error.path) {
+  //             case 'vouncherCode':
+  //               setVouncherCodeError(error.message);
+  //               break;
+  //           }
+  //         });
+  //         return;
+  //       }
+
+  //       setRebate(0);
+  //       setIsEntry(false);
+  //       setVouncherCode('');
+  //       setVouncherCodeError('');
+
+  //       if (err.response && err.response.data) {
+  //         console.log(err.response.data);
+  //         const {message} = err.response.data;
+  //         if (typeof message === 'string') {
+  //           Alert.alert('Mensagem', message);
+  //         }
+  //       }
+  //     }
+  //   })();
+  // }, [butcheryId, onVouncher, total, vouncherCode]);
+
   useEffect(() => {
     getShoppingCart();
   }, []);

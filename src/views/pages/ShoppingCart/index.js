@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import {
-  Container, Row, Col, Button, Card, CardImg, CardBody, CardText, CardTitle
+  Container, Row, Col, Button, Card, CardImg, CardBody, CardText, CardTitle, Input
 } from "reactstrap";
 
 import { useHistory } from "react-router-dom";
@@ -12,6 +12,11 @@ import api from "../../../services/api"
 export default function ShoppingCart() {
   const [disciplines, setDisciplines] = useState([]);
   const [total, setTotal] = useState(0);
+  const [coupon, setCoupon] = useState('');
+  const [observation, setObservation] = useState('');
+  const [discountCodeError, setDiscountCodeError] = useState('');
+  const [rebate, setRebate] = useState(0);
+
   const image = "https://www.tacticalgear.com.br/skin/frontend/base/default/images/empty-shopping-cart-icon.png"
   const history = useHistory();
 
@@ -25,6 +30,39 @@ export default function ShoppingCart() {
     prices.forEach(discipline => {
       setTotal(prevState => prevState += discipline.price)
     })
+  }
+
+  const handleCoupon = async (e) => {
+    try {
+      const data = {
+        discountCode: encodeURI(coupon.replace(/^\s+|\s+$/g, '')),
+      };
+
+      const {data: isDiscountFirstBuy} = await api.get(
+        `/client/checkDiscountFirstBuy?discountCode=${data.discountCode}`,
+      );
+
+      if (isDiscountFirstBuy) {
+        await api.get(`/client/verifyFirstBuy`);
+      }
+
+      const {data: discount} = await api.get(
+        `client/verifyDiscountCode?discountCode=${
+          data.discountCode
+        }`,
+      );
+        console.log(discount);
+      setRebate(discount.value || (total * discount.percent) / 100);
+      setObservation(discount.observation);
+      setDiscountCodeError('');
+
+    } catch (err) {
+      console.log(err);
+    }
+
+    setRebate(0);
+    setCoupon('');
+    setDiscountCodeError('');
   }
 
   useEffect(() => {
@@ -120,17 +158,46 @@ export default function ShoppingCart() {
               </CardText>
             </>
           ))}
-        <span>Total: {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-        <Row className="justify-content-center w-70 m-4">
+          {rebate == 0 ? (
+            <span>Total: {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+          ):(
+            <span>Total:
+              {(total - rebate).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </span>
+          )}
+          <CardText className="mt-3">Cupom de desconto </CardText>
+          <Input
+            className='mb-2'
+            placeholder='Adicione o cupom'
+            type='text'
+            value={coupon}
+            onChange={e => setCoupon(e.target.value)}
+          />
           <Button
+            className="btn-icon btn-3"
+            size="sm"
             color="primary"
-            outline
             type="button"
-            onClick={() => history.push('/auth/payment')}
-          >
-            Realizar Pagamento
+            onClick={() => handleCoupon()}
+            >
+              <span className="btn-inner--icon">
+                <i className="fa fa-search mr-2" />
+                Verificar
+              </span>
           </Button>
-        </Row>
+
+
+            <Row className="justify-content-center m-4">
+              <Button
+                color="primary"
+                outline
+                type="button"
+                disabled={disciplines.length == 0}
+                onClick={() => history.push('/auth/payment')}
+              >
+                Realizar Pagamento
+              </Button>
+            </Row>
           </Card>
         </Col>
         </Row>
