@@ -18,11 +18,12 @@ import NotificationAlert from "react-notification-alert";
 
 import api from "../../../services/api"
 
-export default function Payment() {
+export default function Payment({match}) {
   const [clientId, setClientId] = useState();
   const [disciplines, setDisciplines] = useState([]);
   const [total, setTotal] = useState(0);
   const [typePayment, setTypePayment] = useState('');
+  const rebate = parseFloat(match.params.total)
   const history = useHistory();
 
   const inputRef = useRef("notificationAlert");
@@ -36,7 +37,7 @@ export default function Payment() {
 
   const getTotal = (prices) => {
     prices.forEach(discipline => {
-      setTotal(prevState => prevState += discipline.price)
+      setTotal(prevState => prevState += parseFloat(discipline.price))
     })
   }
 
@@ -47,16 +48,16 @@ export default function Payment() {
       const data = {
         disciplines: list,
         client_id: clientId,
-        payment: typePayment
+        payment: typePayment,
+        // rebate
       }
 
       const response = await api.post('client/purchase/store', data)
 
       clearShoppingCart()
 
-
-      setTimeout(history.push(`/auth/mydiscipline`), 3000)
     } catch (error) {
+      console.log(error);
       notify("fas fa-times", "danger", "Erro!", "Ocorreu um erro ao efetuar compra.");
 
     }
@@ -68,82 +69,12 @@ export default function Payment() {
         shopping_cart: [null], // atualiza shopping_cart para null (vazio)
       });
       notify("fas fa-check", "success", "Sucesso! ", " Compra efetuada com Sucesso! ");
-
+      setTimeout(history.push(`/auth/mydiscipline`), 3000)
     } catch (error) {
+      console.log(error);
       notify("fas fa-times", "danger", "Erro!", "Falha ao limpar carrinho");
     }
   }
-
-  // const handleSubmit = useCallback(() => {
-  //   (async () => {
-  //     try {
-  //       setLoading(true);
-  //       const data = {
-  //         vouncherCode: encodeURI(vouncherCode.replace(/^\s+|\s+$/g, '')),
-  //       };
-  //       const schema = Yup.object().shape({
-  //         vouncherCode: Yup.string().required('Informe o Código do Cupom'),
-  //       });
-  //       await schema.validate(data, {
-  //         abortEarly: false,
-  //       });
-
-  //       const {data: isVouncherFirstBuy} = await api.get(
-  //         `/client/checkVouncherFirstBuy?vouncherCode=${data.vouncherCode}`,
-  //       );
-
-  //       if (isVouncherFirstBuy) {
-  //         await api.get(`/client/verifyFirstBuy?orderPrice=${total}`);
-  //       }
-
-  //       const {data: vouncher} = await api.get(
-  //         `client/verifyVouncherCode?vouncherCode=${
-  //           data.vouncherCode
-  //         }&butcheryId=${butcheryId}&orderPrice=${total}`,
-  //       );
-
-  //       setRebate(vouncher.value || (total * vouncher.percent) / 100);
-  //       setObservation(vouncher.observation);
-  //       setVouncherCodeError('');
-  //       if (onVouncher) {
-  //         onVouncher(vouncher);
-  //       }
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //       setLoading(false);
-
-  //       if (REACT_NATIVE_ENV === 'production') {
-  //         Sentry.setTag('api', 'put');
-  //         Sentry.captureException(err);
-  //       }
-
-  //       if (err instanceof Yup.ValidationError) {
-  //         err.inner.forEach(error => {
-  //           switch (error.path) {
-  //             case 'vouncherCode':
-  //               setVouncherCodeError(error.message);
-  //               break;
-  //           }
-  //         });
-  //         return;
-  //       }
-
-  //       setRebate(0);
-  //       setIsEntry(false);
-  //       setVouncherCode('');
-  //       setVouncherCodeError('');
-
-  //       if (err.response && err.response.data) {
-  //         console.log(err.response.data);
-  //         const {message} = err.response.data;
-  //         if (typeof message === 'string') {
-  //           Alert.alert('Mensagem', message);
-  //         }
-  //       }
-  //     }
-  //   })();
-  // }, [butcheryId, onVouncher, total, vouncherCode]);
 
   useEffect(() => {
     getShoppingCart();
@@ -178,7 +109,7 @@ export default function Payment() {
       <Row>
         <Col md={7} >
           <Card className='p-3 border-6'>
-            <CardTitle className = 'text-dark'>
+            <CardTitle className ='text-dark'>
               <h2>Finalizar compra</h2>
             </CardTitle>
             {/* <Row className = 'text-dark ml-1 mb-3'>
@@ -258,7 +189,7 @@ export default function Payment() {
                   </Col>
                 </Row>
                   <Input
-                    className= ' mb-2'
+                    className='mb-2'
                     placeholder='Nome impresso no cartão'
                     type='text'
                   />
@@ -274,7 +205,7 @@ export default function Payment() {
                   <Col>
                     <Input
                       maxLength={3}
-                      className= ' mb-2 mr-2'
+                      className='mb-2 mr-2'
                       placeholder='Código de segurança'
                       type='text'
                     />
@@ -309,13 +240,13 @@ export default function Payment() {
               <Col>
                 <h2> Disciplinas: {disciplines.length} </h2>
                 {disciplines.map(discipline => (
-                  <h3>{discipline.name}</h3>
+                  <div key={discipline.id}><h3>{discipline.name}</h3></div>
                 ))}
               </Col>
               <Col>
                 <h2> Valor Total: </h2>
                 <h3 className="text-green">
-                  {total.toLocaleString('pt-BR',
+                  {(total - rebate).toLocaleString('pt-BR',
                     { style: 'currency', currency: 'BRL' }
                   )}
                 </h3>

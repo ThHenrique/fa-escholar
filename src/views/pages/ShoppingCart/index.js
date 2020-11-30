@@ -28,7 +28,7 @@ export default function ShoppingCart() {
 
   const getTotal = (prices) => {
     prices.forEach(discipline => {
-      setTotal(prevState => prevState += discipline.price)
+      setTotal(prevState => prevState += parseFloat(discipline.price))
     })
   }
 
@@ -51,16 +51,13 @@ export default function ShoppingCart() {
           data.discountCode
         }`,
       );
-        console.log(discount);
-      setRebate(discount.value || (total * discount.percent) / 100);
+      const newDiscount = (parseFloat(total) * parseFloat(discount.percent)) / 100
+      setRebate(newDiscount);
       setObservation(discount.observation);
       setDiscountCodeError('');
-
     } catch (err) {
       console.log(err);
     }
-
-    setRebate(0);
     setCoupon('');
     setDiscountCodeError('');
   }
@@ -73,133 +70,134 @@ export default function ShoppingCart() {
     <>
       <Container className="mb-8 mt-8">
         <Row className='d-flex justify-content-center align-items-center'>
-        <Col md={9}>
-          <Row className="justify-content-md-center mt-50">
-            <h1>
-              Items em seu carrinho
-            </h1>
-          </Row>
-          {disciplines.length > 0 ? (
-            <>
-              {disciplines.map((item) => (
+          <Col md={9}>
+            <Row className="justify-content-md-center mt-50">
+              <h1>
+                Items em seu carrinho
+              </h1>
+            </Row>
+            {disciplines.length > 0 ? (
+              <>
+                {disciplines.map((item) => (
+                  <>
+                    <Card
+                      key={item.id}
+                      className="pt-5 pb-5 mt-3 border-4"
+                      onClick={(e) => history.push(`saleDiscipline/${item.id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <Row className=" justify-content-center align-items-center">
+                        <Col lg="3" md="6" className="d-flex justify-content-center">
+                          <CardImg
+                            id="background"
+                            className={item.image ? "has-background" : ""}
+                            style={{
+                              backgroundImage: `url(${item.image})`,
+                              width: 100,
+                              height: 100,
+                              backgroundSize: "cover",
+                              backgroundRepeat: "no-repeat",
+                            }}
+                          />
+                        </Col>
+                        <Col lg="6" md="6">
+                          <h2>{item.name}</h2>
+                          <Row>
+                            <Col>
+                              <h4 className="text-dark">
+                              #{item.id}
+                              </h4>
+                            </Col>
+                            <Col>
+                              <h4 className="text-green">
+                              {item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                              </h4>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </Card>
+                  </>
+                ))}
+              </>
+            ):(
+              <>
+                <div
+                  id="background"
+                  style={{
+                    backgroundImage: `url(${image})`,
+                    height: 212, width: 335,
+                    backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
+                <Col className="mt-5 text-center text-black-50">
+                  <big>
+                    Que pena! Seu carrinho está vazio
+                    Adicione agora mesmo! {' '}
+                    <Link to="/home">Ir</Link>
+                  </big>
+                </Col>
+              </>
+            )}
+          </Col>
+          <Col md={3}>
+            <Card className='p-3'>
+              {disciplines.map(item => (
                 <>
-                  <Card
-                    key={item.id}
-                    className="pt-5 pb-5 mt-3 border-4"
-                    onClick={(e) => history.push(`saleDiscipline/${item.id}`)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <Row className=" justify-content-center align-items-center">
-                      <Col lg="3" md="6" className="d-flex justify-content-center">
-                        <CardImg
-                          id="background"
-                          className={item.image ? "has-background" : ""}
-                          style={{
-                            backgroundImage: `url(${item.image})`,
-                            width: 100,
-                            height: 100,
-                            backgroundSize: "cover",
-                            backgroundRepeat: "no-repeat",
-                          }}
-                        />
-                      </Col>
-                      <Col lg="6" md="6">
-                        <h2>{item.name}</h2>
-                        <Row>
-                          <Col>
-                            <h4 className="text-dark">
-                            #{item.id}
-                            </h4>
-                          </Col>
-                          <Col>
-                            <h4 className="text-green">
-                             {item.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                            </h4>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </Card>
+                  <CardTitle>{item.name}</CardTitle>
+                  <CardText>
+                    <small className="text-muted">
+                      {item.price.toLocaleString('pt-BR',
+                        { style: 'currency', currency: 'BRL' })
+                      }
+                    </small>
+                  </CardText>
                 </>
               ))}
-            </>
-          ):(
-            <>
-              <div
-                id="background"
-                style={{
-                  backgroundImage: `url(${image})`,
-                  height: 212, width: 335,
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat",
-                }}
-              />
-              <Col className="mt-5 text-center text-black-50">
-                <big>
-                  Que pena! Seu carrinho está vazio
-                  Adicione agora mesmo! {' '}
-                  <Link to="/home">Ir</Link>
-                </big>
-              </Col>
-            </>
-          )}
-        </Col>
-        <Col md={3}>
-        <Card className='p-3'>
-          {disciplines.map(item => (
-            <>
-              <CardTitle>{item.name}</CardTitle>
-              <CardText>
-                <small className="text-muted">
-                  {item.price.toLocaleString('pt-BR',
-                    { style: 'currency', currency: 'BRL' })
-                  }
-                </small>
-              </CardText>
-            </>
-          ))}
-          {rebate == 0 ? (
-            <span>Total: {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-          ):(
-            <span>Total:
-              {(total - rebate).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-            </span>
-          )}
-          <CardText className="mt-3">Cupom de desconto </CardText>
-          <Input
-            className='mb-2'
-            placeholder='Adicione o cupom'
-            type='text'
-            value={coupon}
-            onChange={e => setCoupon(e.target.value)}
-          />
-          <Button
-            className="btn-icon btn-3"
-            size="sm"
-            color="primary"
-            type="button"
-            onClick={() => handleCoupon()}
-            >
-              <span className="btn-inner--icon">
-                <i className="fa fa-search mr-2" />
-                Verificar
-              </span>
-          </Button>
+              {rebate == 0 ? (
+                <>
+                  <span>Total: {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
 
-
-            <Row className="justify-content-center m-4">
-              <Button
-                color="primary"
-                outline
-                type="button"
-                disabled={disciplines.length == 0}
-                onClick={() => history.push('/auth/payment')}
-              >
-                Realizar Pagamento
-              </Button>
-            </Row>
-          </Card>
-        </Col>
+                  <CardText className="mt-3">Cupom de desconto </CardText>
+                  <Input
+                    className='mb-2'
+                    placeholder='Adicione o cupom'
+                    type='text'
+                    value={coupon}
+                    onChange={e => setCoupon(e.target.value)}
+                  />
+                  <Button
+                    className="btn-icon btn-3"
+                    size="sm"
+                    color="primary"
+                    type="button"
+                    onClick={() => handleCoupon()}
+                    >
+                      <span className="btn-inner--icon">
+                        <i className="fa fa-search mr-2" />
+                        Verificar
+                      </span>
+                  </Button>
+                </>
+              ):(
+                <span>Total:
+                  {(total - rebate).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                </span>
+              )}
+              <Row className="justify-content-center m-4">
+                <Button
+                  color="primary"
+                  outline
+                  type="button"
+                  disabled={disciplines.length == 0}
+                  onClick={() => history.push(`/auth/payment/${rebate}`)}
+                >
+                  Realizar Pagamento
+                </Button>
+              </Row>
+            </Card>
+          </Col>
         </Row>
       </Container>
     </>

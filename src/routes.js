@@ -74,7 +74,7 @@ const routes = [
         layout: "/auth"
       },
       {
-        path: "/payment",
+        path: "/payment/:total",
         name: "Pagamento",
         component: Pagamento,
         layout: "/auth"

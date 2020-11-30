@@ -52,7 +52,7 @@ export default function Cadastro(){
       const response = await api.post('clientAuth/signUp', data)
       const { token } = response.data;
 
-      notify("fas fa-check", "success", "Sucesso! ", " Compra efetuada com Sucesso! ");
+      notify("fas fa-check", "success", "Sucesso! ", " Cadastro efetuado com Sucesso! ");
       localStorage.setItem('token', token);
       setTimeout(() => {
         setLoad('Cadastrar');
